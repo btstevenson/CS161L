@@ -1,0 +1,87 @@
+----------------------------------------------------------------------------------
+-- Company: 
+-- Engineer: 
+-- 
+-- Create Date:    10:34:07 01/07/2016 
+-- Design Name: 
+-- Module Name:    my_alu - Behavioral 
+-- Project Name: 
+-- Target Devices: 
+-- Tool versions: 
+-- Description: 
+--
+-- Dependencies: 
+--
+-- Revision: 
+-- Revision 0.01 - File Created
+-- Additional Comments: 
+--
+----------------------------------------------------------------------------------
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.NUMERIC_STD.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
+
+-- Uncomment the following library declaration if using
+-- arithmetic functions with Signed or Unsigned values
+--use IEEE.NUMERIC_STD.ALL;
+
+-- Uncomment the following library declaration if instantiating
+-- any Xilinx primitives in this code.
+--library UNISIM;
+--use UNISIM.VComponents.all;
+
+entity my_alu is
+		Generic(NUMBITS : natural := 8);
+    Port ( A : in  STD_LOGIC_VECTOR(NUMBITS-1 downto 0);
+           B : in  STD_LOGIC_VECTOR(NUMBITS-1 downto 0);
+           opcode : in  STD_LOGIC_VECTOR(2 downto 0);
+           result : out  STD_LOGIC_VECTOR(NUMBITS-1 downto 0);
+           carryout : out  STD_LOGIC;
+           overflow : out  STD_LOGIC;
+           zero : out  STD_LOGIC);
+end my_alu;
+
+architecture Behavioral of my_alu is
+
+begin
+
+	process(A, B, opcode)
+		VARIABLE temp : STD_LOGIC_VECTOR(NUMBITS-1 downto 0);
+		VARIABLE flowCheck : STD_LOGIC_VECTOR(NUMBITS downto 0);
+	begin
+		case opcode is
+			when "000" =>
+				result <= std_logic_vector(unsigned(A) + unsigned(B));
+				temp := std_logic_vector(unsigned(A) + unsigned(B));
+				
+			when "001" =>
+				result <= A;
+			when "010" =>
+				result <= A;
+			when "011" =>
+				result <= A;
+			when "100" =>
+				result <= A and B;
+				temp := A and B;
+			when "101" =>
+				result <= A or B;
+				temp := A or B;
+			when "110" =>
+				result <= A xor B;
+				temp := A xor B;
+			when "111" =>
+				result <= '0' & A(NUMBITS-1 downto 1);
+				temp := '0' & A(NUMBITS-1 downto 1);
+			when OTHERS =>
+				result <= A;
+		end case;
+		if (temp = "00000000") then
+			zero <= '1';
+		else
+			zero <= '0';
+		end if;
+	end process;
+
+end Behavioral;
+
