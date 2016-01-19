@@ -101,29 +101,92 @@ BEGIN
       -- insert stimulus here
 			--test cases
 			
-			A <= "10000001";
-			B <= "10000001";
+			--unsigned add case 1
+			A <= "10000010";
+			B <= "10000010";
 			opcode <= "000";
 			wait for clock_period;
+			Assert (result = "00000100")
+				Report "result incorrect for unsigned add case1"
+				Severity ERROR;
 			Assert (carryout = '1')
-				Report "Carryout for unsigned add not detected"
+				Report "Carryout for unsigned add not detected: case1"
 				Severity ERROR;
 			Assert (overflow = '1')
-				Report "Overflow for unsigned add not detected"
+				Report "Overflow for unsigned add not detected: case1"
 				Severity ERROR;
 				
+			--unsigned add case 2	
 			A <= "00000000";
 			B <= "00000000";
 			opcode <= "000";
 			wait for clock_period;
 			Assert (carryout = '0')
-				Report "Carryout for unsigned add detected"
+				Report "Carryout for unsigned add detected: case2"
 				Severity ERROR;
 			Assert (overflow = '0')
-				Report "Overflow for unsigned add detected"
+				Report "Overflow for unsigned add detected: case2"
 				Severity ERROR;
 			Assert (zero = '1')
-				Report "Zero for unsigned add not detected"
+				Report "Zero for unsigned add not detected: case2"
+				Severity ERROR;
+				
+			--unsigned add case 3
+			A <= "00100100";
+			B <= "01000100";
+			opcode <= "000";
+			wait for clock_period;
+			Assert (result = "01101000")
+				Report "result incorrect for unsigned add case3"
+				Severity ERROR;
+			Assert (carryout = '0')
+				Report "Carryout for unsigned add detected: case3"
+				Severity ERROR;
+			Assert (overflow = '0')
+				Report "Overflow for unsigned add detected: case3"
+				Severity ERROR;
+			Assert (zero = '0')
+				Report "Zero for unsigned add detected: case3"
+				Severity ERROR;
+			
+			--signed add case 1
+			A <= "00000010";
+			B <= "11111110";
+			opcode <= "001";
+			wait for clock_period;
+			Assert (carryout = '1')
+				Report "Carryout for signed add not detected: case1"
+				Severity ERROR;
+			Assert (zero = '1')
+				Report "zero for signed add not detected: case1"
+				Severity ERROR;
+			Assert (overflow = '0')
+				Report "overflow for signed add detected: case1"
+				Severity ERROR;
+			--signed add case 2
+			A <= "10000001";
+			B <= "10000001";
+			opcode <= "001";
+			wait for clock_period;
+			Assert (carryout = '1')
+				Report "Carryout for signed add not detected: case2"
+				Severity ERROR;
+			Assert (overflow = '1')
+				Report "Overflow for signed add not detected: case2"
+				Severity ERROR;
+			Assert (zero = '0')
+				Report "zero for signed add detected: case2"
+				Severity ERROR;
+			Assert (result = "00000010")
+				Report "result is incorrect for signed add: case2"
+				Severity ERROR;
+			--signed add case 3
+			A <= "11100011";
+			B <= "01010101";
+			opcode <= "001";
+			wait for clock_period;
+			Assert (carryout = '1')
+				Report"Carryout for signed add not detected: case2"
 				Severity ERROR;
 			
 			A <= "00000001";
