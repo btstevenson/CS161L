@@ -51,14 +51,23 @@ begin
 		VARIABLE flowCheck : STD_LOGIC_VECTOR(NUMBITS downto 0);
 	begin
 		case opcode is
+			--unsigned add
 			when "000" =>
 				result <= std_logic_vector(unsigned(A) + unsigned(B));
+				flowCheck := std_logic_vector(unsigned('0' & A) + unsigned('0' & B));
+				if (flowCheck(NUMBITS) = '1') then
+					overflow <= '1';
+				else
+					overflow <= '0';
+				end if;
 				temp := std_logic_vector(unsigned(A) + unsigned(B));
-				
+			--signed add
 			when "001" =>
 				result <= A;
+			--unsigned sub
 			when "010" =>
 				result <= A;
+			--signed sub
 			when "011" =>
 				result <= A;
 			when "100" =>
@@ -81,6 +90,13 @@ begin
 		else
 			zero <= '0';
 		end if;
+		--check for carryout for all cases
+		if (flowCheck(NUMBITS) = '1') then
+			carryout <= '1';
+		else
+			carryout <= '0';
+		end if;
+		flowCheck := "000000000";
 	end process;
 
 end Behavioral;

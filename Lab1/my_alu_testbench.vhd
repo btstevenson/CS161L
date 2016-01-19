@@ -100,6 +100,32 @@ BEGIN
 
       -- insert stimulus here
 			--test cases
+			
+			A <= "10000001";
+			B <= "10000001";
+			opcode <= "000";
+			wait for clock_period;
+			Assert (carryout = '1')
+				Report "Carryout for unsigned add not detected"
+				Severity ERROR;
+			Assert (overflow = '1')
+				Report "Overflow for unsigned add not detected"
+				Severity ERROR;
+				
+			A <= "00000000";
+			B <= "00000000";
+			opcode <= "000";
+			wait for clock_period;
+			Assert (carryout = '0')
+				Report "Carryout for unsigned add detected"
+				Severity ERROR;
+			Assert (overflow = '0')
+				Report "Overflow for unsigned add detected"
+				Severity ERROR;
+			Assert (zero = '1')
+				Report "Zero for unsigned add not detected"
+				Severity ERROR;
+			
 			A <= "00000001";
 			B <= "00000000";
 			opcode <= "100";
