@@ -93,7 +93,24 @@ begin
 				end if;
 			--signed sub
 			when "011" =>
-				result <= A;
+				result <= std_logic_vector(signed(A) + signed((not B) + 1));
+				temp := std_logic_vector(signed(A) + signed((not B) + 1));
+				flowCheck := std_logic_vector(signed('0' & A) + signed('0' & ((not B) + 1)));
+				if(A(NUMBITS-1) = '0' and B(NUMBITS-1) = '1') then
+					if(TO_INTEGER(signed(temp)) < 0) then
+						overflow <= '1';
+					else
+						overflow <= '0';
+					end if;
+				elsif(A(NUMBITS-1) = '1' and B(NUMBITS-1) = '0') then
+					if(TO_INTEGER(signed(temp)) >= 0) then
+						overflow <= '1';
+					else
+						overflow <= '0';
+					end if;
+				else
+					overflow <= '0';
+				end if;
 			when "100" =>
 				result <= A and B;
 				temp := A and B;
