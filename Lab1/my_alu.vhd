@@ -83,7 +83,14 @@ begin
 				end if;
 			--unsigned sub
 			when "010" =>
-				result <= A;
+				result <= std_logic_vector(unsigned(A) + unsigned((not B) + 1));
+				temp := std_logic_vector(unsigned(A) + unsigned((not B) + 1));
+				flowCheck := std_logic_vector(unsigned('0' & A) + unsigned('0' &((not B) + 1)));
+				if(flowCheck(NUMBITS) = '0') then
+					overflow <= '1';
+				else
+					overflow <= '0';
+				end if;
 			--signed sub
 			when "011" =>
 				result <= A;
