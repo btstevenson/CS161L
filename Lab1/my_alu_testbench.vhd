@@ -229,6 +229,63 @@ BEGIN
 			Assert (result = "11000000")
 				Report "result is incorrect for unsigned sub: case3"
 				Severity ERROR;
+				
+			--signed sub case 1
+			A <= "11111111";
+			B <= "00111111";
+			opcode <= "011";
+			wait for clock_period;
+			Assert (result = "11000000")
+				Report "result is incorrect for signed sub: case1"
+				Severity ERROR;
+			Assert (overflow = '0')
+				Report "Overflow for signed sub detected: case1"
+				Severity ERROR;
+			
+			--signed sub case 2
+			A <= "10000001";
+			B <= "01111111";
+			opcode <= "011";
+			wait for clock_period;
+			Assert (result = "00000010")
+				Report "result is incorrect for signed sub: case2"
+				Severity ERROR;
+			Assert (overflow = '1')
+				Report "Overflow not detected for signed sub: case2"
+				Severity ERROR;
+			Assert (carryout = '1')
+				Report "Carryout not detected for signed sub: case2"
+				Severity ERROR;
+				
+			--signed sub case 3
+			A <= "00000010";
+			B <= "11111100";
+			opcode <= "011";
+			wait for clock_period;
+			Assert (result = "00000110")
+				Report "result is incorrect for signed sub: case3"
+				Severity ERROR;
+			Assert (carryout = '0')
+				Report "Carryout detected for signed sub: case3"
+				Severity ERROR;
+			Assert (overflow = '0')
+				Report "Overflow detected for signed sub: case3"
+				Severity ERROR;
+			
+			--signed sub case 4
+			A <= "00000010";
+			B <= "00000010";
+			opcode <= "011";
+			wait for clock_period;
+			Assert (result = "00000000")
+				Report "result is incorrect for signed sub: case4"
+				Severity ERROR;
+			Assert (zero = '1')
+				Report "zero not detected for signed sub: case4"
+				Severity ERROR;
+			Assert (carryout = '1')
+				Report "carryout not detected for signed sub: case4"
+				Severity ERROR;
 			
 			A <= "00000001";
 			B <= "00000000";
