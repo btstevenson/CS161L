@@ -188,6 +188,47 @@ BEGIN
 			Assert (carryout = '1')
 				Report"Carryout for signed add not detected: case2"
 				Severity ERROR;
+				
+			--unsigned sub case 1
+			A <= "00000010";
+			B <= "00000010";
+			opcode <= "010";
+			wait for clock_period;
+			Assert (zero = '1')
+				Report "zero for unsigned sub not detected: case1"
+				Severity ERROR;
+			Assert (carryout = '1')
+				Report "Carryout for unsigned sub not detected: case1"
+				Severity ERROR;
+			
+			--unsigned sub case 2
+			A <= "01000000";
+			B <= "10000000";
+			opcode <= "010";
+			wait for clock_period;
+			Assert (overflow = '1')
+				Report "Overflow for unsigned sub not detected: case2"
+				Severity ERROR;
+			Assert (carryout = '0')
+				Report "Carryout for unsigned sub detected: case2"
+				Severity ERROR;
+			Assert (result = "11000000")
+				Report "result is incorrect for unsigned sub: case2"
+				Severity ERROR;
+			--unsigned sub case 3
+			A <= "10000000";
+			B <= "11000000";
+			opcode <= "010";
+			wait for clock_period;
+			Assert (overflow = '1')
+				Report "Overflow for unsigned sub not detected: case3"
+				Severity ERROR;
+			Assert (carryout = '0')
+				Report "Carryout for unsigned sub detected: case3"
+				Severity ERROR;
+			Assert (result = "11000000")
+				Report "result is incorrect for unsigned sub: case3"
+				Severity ERROR;
 			
 			A <= "00000001";
 			B <= "00000000";
