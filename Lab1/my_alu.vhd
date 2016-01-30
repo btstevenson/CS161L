@@ -61,6 +61,11 @@ begin
 					overflow <= '0';
 				end if;
 				temp := std_logic_vector(unsigned(A) + unsigned(B));
+				if (flowCheck(NUMBITS) = '1') then
+					carryout <= '1';
+				else
+					carryout <= '0';
+				end if;
 			--signed add
 			when "001" =>
 				result <= std_logic_vector(signed(A) + signed(B));
@@ -80,6 +85,11 @@ begin
 					end if;
 				else
 					overflow <= '0';
+					if (flowCheck(NUMBITS) = '1') then
+						carryout <= '1';
+					else
+						carryout <= '0';
+					end if;
 				end if;
 			--unsigned sub
 			when "010" =>
@@ -91,6 +101,7 @@ begin
 				else
 					overflow <= '0';
 				end if;
+				carryout <= '0';
 			--signed sub
 			when "011" =>
 				result <= std_logic_vector(signed(A) + signed((not B) + 1));
@@ -110,35 +121,57 @@ begin
 					end if;
 				else
 					overflow <= '0';
+					if (flowCheck(NUMBITS) = '1') then
+						carryout <= '0';
+					else
+						carryout <= '1';
+					end if;
 				end if;
 			when "100" =>
 				result <= A and B;
 				temp := A and B;
+				flowCheck := std_logic_vector(('0' & A) and ('0' & B));
+				if (flowCheck(NUMBITS) = '1') then
+					carryout <= '1';
+				else
+					carryout <= '0';
+				end if;
 			when "101" =>
 				result <= A or B;
 				temp := A or B;
+				flowCheck := std_logic_vector(('0' & A) or ('0' & B));
+				if (flowCheck(NUMBITS) = '1') then
+					carryout <= '1';
+				else
+					carryout <= '0';
+				end if;
 			when "110" =>
 				result <= A xor B;
 				temp := A xor B;
+				flowCheck := std_logic_vector(('0' & A) xor ('0' & B));
+				if (flowCheck(NUMBITS) = '1') then
+					carryout <= '1';
+				else
+					carryout <= '0';
+				end if;
 			when "111" =>
 				result <= '0' & A(NUMBITS-1 downto 1);
 				temp := '0' & A(NUMBITS-1 downto 1);
+				flowCheck := std_logic_vector('0' & ('0' & A(NUMBITS-1 downto 1)));
+				if (flowCheck(NUMBITS) = '1') then
+					carryout <= '1';
+				else
+					carryout <= '0';
+				end if;
 			when OTHERS =>
 				result <= A;
 		end case;
-		if (temp = "00000000") then
+		if (TO_INTEGER(signed(temp)) = 0) then
 			zero <= '1';
 		else
 			zero <= '0';
 		end if;
-		--check for carryout for all cases
-		if (flowCheck(NUMBITS) = '1') then
-			carryout <= '1';
-		else
-			carryout <= '0';
-		end if;
-		flowCheck := "000000000";
+	
 	end process;
 
 end Behavioral;
-
