@@ -18,7 +18,7 @@ package cpu_component_library is
 
   component mux_2_1 is
     generic(
-      SIZE        : natural   := 4
+      SIZE        : natural   := 5
       );
     port (
       select_in   : in std_logic;
@@ -89,6 +89,13 @@ package cpu_component_library is
 		 instruction_5_0   : in std_logic_vector(5 downto 0);
 		 alu_out           : out std_logic_vector(3 downto 0)
 		 );
+	end component;
+	
+	component adder is
+		port (
+			pc_address		 : in std_logic_vector(31 downto 0);
+			output 			 : out std_logic_vector(31 downto 0)
+		);
 	end component;
 end cpu_component_library;
 

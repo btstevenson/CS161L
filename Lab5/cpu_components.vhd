@@ -42,7 +42,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity mux_2_1 is
   generic(
-    SIZE           : natural   := 4
+    SIZE           : natural   := 5
   );
   port (
     select_in      : in std_logic;
@@ -309,7 +309,8 @@ end Behavioral;
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
---use work.cpu_constant_library.all;
+use IEEE.NUMERIC_STD.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
 entity control_unit is
   port (
@@ -403,3 +404,25 @@ begin
   end process;
 end Behavioral;
 
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.NUMERIC_STD.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
+
+entity adder is
+	port(
+		pc_address : in std_logic_vector (31 downto 0);
+		output : out std_logic_vector (31 downto 0)
+		);
+end adder;
+
+architecture Behavioral of adder is
+begin
+	process(pc_address)
+		variable temp : std_logic_vector(31 downto 0);
+	begin
+			temp := (others => '0');
+			temp := pc_address(31 downto 0) + "0100";
+			output <= temp;
+	end process;
+end Behavioral;
