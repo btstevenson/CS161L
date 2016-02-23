@@ -43,7 +43,7 @@ architecture Behavioral of cs161_processor is
     signal pc_signal_next : std_logic_vector(31 downto 0) := (others => '0') ;
 	 signal pc_signal_prev : std_logic_vector(31 downto 0) := (others => '0') ;
 	 signal instr_address : std_logic_vector(7 downto 0);
-	 signal instruction_memory_out : std_logic_vector(31 downto 0);
+	 signal instr_memory_out : std_logic_vector(31 downto 0);
 	 signal control_input : std_logic_vector(5 downto 0);
 	 signal register_input_1 : std_logic_vector(4 downto 0);
 	 signal register_input_2 : std_logic_vector(4 downto 0);
@@ -80,15 +80,32 @@ begin
 
 	instr_address <= pc_signal_next ( 9 downto 2 );
 
-	Instruction_Memory : memory port map(clk => clk,
-													 rst => rst,
-													 instr_read_address => instr_address,
-													 instr_instruction => instruction_memory_out,
-													 data_mem_write => '0',
-													 data_address => (others => '0'),
-													 data_write_data => (others => '0'),
-													 data_read_data => open);
-
+	Instruction_Memory : memory port map(clk 						=> clk,
+													 rst 						=> rst,
+													 instr_read_address 	=> instr_address,
+													 instr_instruction 	=> instr_memory_out,
+													 data_mem_write 		=> '0',
+													 data_address 			=> (others => '0'),
+													 data_write_data 		=> (others => '0'),
+													 data_read_data 		=> open);
+													 
+	Add_1 : adder port map(pc_address => pc_signal_next,
+								  output => add_1_output);
+	
+	Mux_1 : mux_2_1 port map(data_0_in => instr_memory_out(20 downto 16),
+									 data_1_in => instr_memory_out(15 downto 11),
+									 select_in => control_output_RegDst,
+									 data_out  => mux_1_output);
+	
+	Cntrl_Unit : control_unit port map(instr_op   => instr_memory_out(31 downto 26),
+													 reg_dst    => control_output_RegDst,
+													 branch     => control_output_Branch,
+													 mem_read   => control_output_MemRead,
+													 mem_to_reg => control_output_MemToReg,
+													 alu_op		=> control_output_ALUOp,
+													 mem_write	=> control_output_MemWrite,
+													 alu_src		=> control_output_ALUSrc,
+													 reg_write	=> control_output_RegWrite);
 end Behavioral;
 
 
