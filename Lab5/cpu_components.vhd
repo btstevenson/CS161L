@@ -40,7 +40,7 @@ end Behavioral;
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
-entity mux_2_1 is
+entity mux_2_1_5 is
   generic(
     SIZE           : natural   := 5
   );
@@ -50,9 +50,43 @@ entity mux_2_1 is
     data_1_in      : in std_logic_vector(SIZE-1 downto 0);
     data_out       : out std_logic_vector(SIZE-1 downto 0)
   );
-end mux_2_1;
+end mux_2_1_5;
 
-architecture Behavioral of mux_2_1 is
+architecture Behavioral of mux_2_1_5 is
+
+begin
+
+  process (select_in, data_0_in, data_1_in)
+  begin
+    case select_in is
+      when '0'    =>    data_out <= data_0_in;
+      when '1'    =>    data_out <= data_1_in;
+      when others =>    data_out <= (others => '0');
+    end case;
+  end process;
+
+end Behavioral;
+
+-- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+-- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+-- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity mux_2_1_32 is
+  generic(
+    SIZE           : natural   := 32
+  );
+  port (
+    select_in      : in std_logic;
+    data_0_in      : in std_logic_vector(SIZE-1 downto 0);
+    data_1_in      : in std_logic_vector(SIZE-1 downto 0);
+    data_out       : out std_logic_vector(SIZE-1 downto 0)
+  );
+end mux_2_1_32;
+
+architecture Behavioral of mux_2_1_32 is
 
 begin
 
@@ -426,3 +460,51 @@ begin
 			output <= temp;
 	end process;
 end Behavioral;
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.NUMERIC_STD.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
+
+entity sign_extender is
+	port(
+		input		: in std_logic_vector(15 downto 0);
+		output   : out std_logic_vector(31 downto 0)
+		);
+end sign_extender;
+
+architecture Behavorial of sign_extender is
+begin
+	process(input)
+		variable temp : std_logic_vector(31 downto 0);
+	begin
+		temp := (others => '0');
+		temp := std_logic_vector(temp or input);
+		output <= temp;
+	end process;
+end Behavorial;
+
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.NUMERIC_STD.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
+entity shifter is
+	port(
+		input  : in std_logic_vector(31 downto 0);
+		output : out std_logic_vector(31 downto 0)
+		);
+end shifter;
+
+architecture Behavorial of shifter is
+begin
+	process(input)
+		variable temp : std_logic_vector(31 downto 0);
+	begin
+		temp := (others => '0');
+		temp := input;
+		temp := temp(29 downto 0) & '0' & '0';
+		output <= temp;
+	end process;
+end Behavorial;
+
