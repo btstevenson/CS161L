@@ -144,8 +144,8 @@ begin
 								zero_out			=> alu_zero_output,
 								alu_result_out => alu_result_output);
 	
-	Data_Memory : memory port map(clk => clk,
-											rst => rst,
+	Data_Memory : memory port map(clk 					 => clk,
+											rst 					 => rst,
 											instr_read_address => (others => '0'),
 											instr_instruction  => open,
 											data_mem_write 	 => control_output_MemWrite,

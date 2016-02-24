@@ -479,7 +479,7 @@ begin
 		variable temp : std_logic_vector(31 downto 0);
 	begin
 		temp := (others => '0');
-		temp := std_logic_vector(temp or input);
+		temp := std_logic_vector(resize(signed(input), temp'length));
 		output <= temp;
 	end process;
 end Behavorial;
