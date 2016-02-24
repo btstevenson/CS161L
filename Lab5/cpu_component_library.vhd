@@ -16,9 +16,21 @@ package cpu_component_library is
       );
   end component;
 
-  component mux_2_1 is
+  component mux_2_1_5 is
     generic(
       SIZE        : natural   := 5
+      );
+    port (
+      select_in   : in std_logic;
+      data_0_in   : in std_logic_vector(SIZE-1 downto 0);
+      data_1_in   : in std_logic_vector(SIZE-1 downto 0);
+      data_out    : out std_logic_vector(SIZE-1 downto 0)
+      );
+  end component;
+  
+  component mux_2_1_32 is
+    generic(
+      SIZE        : natural   := 32
       );
     port (
       select_in   : in std_logic;
@@ -97,6 +109,21 @@ package cpu_component_library is
 			output 			 : out std_logic_vector(31 downto 0)
 		);
 	end component;
+	
+	component sign_extender is
+		port(
+			input		: in std_logic_vector(15 downto 0);
+			output   : out std_logic_vector(31 downto 0)
+		);
+	end component;
+	
+	component shifter is
+		port(
+			input  : in std_logic_vector(31 downto 0);
+			output : out std_logic_vector(31 downto 0)
+		);
+	end component;
+	
 end cpu_component_library;
 
 package body cpu_component_library is 
