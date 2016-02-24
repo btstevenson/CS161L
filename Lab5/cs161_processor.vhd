@@ -34,12 +34,21 @@ entity cs161_processor is
     reg2_addr      : out std_logic_vector(4 downto 0);
     reg2_data      : out std_logic_vector(31 downto 0);
     write_reg_addr : out std_logic_vector(4 downto 0);
+<<<<<<< HEAD
     write_reg_data : out std_logic_vector(31 downto 0);
 	 --own debug signals for testing
 	 add1_output_debug : out std_logic_vector(31 downto 0);
 	 shift2_debug : out std_logic_vector(31 downto 0);
 	 add2_debug : out std_logic_vector(31 downto 0);
 	 mux3_debug : out std_logic_vector(31 downto 0)
+=======
+    write_reg_data : out std_logic_vector(31 downto 0)
+	 --own debug signals for testing
+	 --add1_output_debug : out std_logic_vector(31 downto 0);
+	 --shift2_debug : out std_logic_vector(31 downto 0);
+	 --add2_debug : out std_logic_vector(31 downto 0);
+	 --mux3_debug : out std_logic_vector(31 downto 0)
+>>>>>>> refs/remotes/origin/Brandon_Branch
     );
 end cs161_processor;
 
@@ -84,6 +93,11 @@ begin
 
 	--instr_address <= pc_signal_prev ( 9 downto 2 );
 	--write_en <= '1';
+<<<<<<< HEAD
+=======
+	
+	--pc_signal_next <= (others => '0');
+>>>>>>> refs/remotes/origin/Brandon_Branch
 
 	PC : generic_register generic map (size => 32)
 			port map(clk 		=> clk, 
@@ -144,8 +158,8 @@ begin
 										 data_0_in => register_read_data_2,
 										 data_out  => mux_2_output);
 										 
-	Shift_2 : shifter port map(input  => sign_extender_output,
-										output => shift_left_output);
+	Shift_2 : shifter port map(shift_input  => sign_extender_output,
+										shift_output => shift_left_output);
 										
 	Add_2 : alu port map(alu_control_in => "0010",
 								channel_a_in	=> add_1_output,
@@ -173,16 +187,22 @@ begin
 	Mux_3 : mux_2_1_32 port map(select_in => and_gate_output,
 										 data_0_in => add_1_output,
 										 data_1_in => add_2_output,
-										 data_out  => mux_3_output);
+										 data_out  => pc_signal_next);
 	
 	Mux_4 : mux_2_1_32 port map(select_in => control_output_MemToReg,
-										 data_0_in => alu_result_output,
-										 data_1_in => data_memory_output,
+										 data_0_in => data_memory_output,
+										 data_1_in => alu_result_output,
 										 data_out  => mux_4_output);
 	
+<<<<<<< HEAD
 	prog_count 		<= pc_signal_next;
 	--pc_signal_prev <= pc_signal_next;
 	pc_signal_next <= mux_4_output;
+=======
+	prog_count 		<= pc_signal_prev;
+	--pc_signal_prev <= pc_signal_next;
+	--pc_signal_next <= mux_4_output;
+>>>>>>> refs/remotes/origin/Brandon_Branch
 	instr_opcode 	<= instr_memory_out(5 downto 0);
 	reg1_addr      <= instr_memory_out(25 downto 21);
    reg1_data      <= register_read_data_1;
@@ -190,10 +210,17 @@ begin
    reg2_data      <= register_read_data_2;
    write_reg_addr <= alu_result_output(4 downto 0);
    write_reg_data <= register_read_data_2;
+<<<<<<< HEAD
 	add1_output_debug <= add_1_output;
 	shift2_debug <= shift_left_output;
 	add2_debug <= add_2_output;
 	mux3_debug <= mux_3_output;
+=======
+	--add1_output_debug <= add_1_output;
+	--shift2_debug <= shift_left_output;
+	--add2_debug <= add_2_output;
+	--mux3_debug <= mux_3_output;
+>>>>>>> refs/remotes/origin/Brandon_Branch
 	
 end Behavioral;
 
