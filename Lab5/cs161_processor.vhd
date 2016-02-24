@@ -35,6 +35,11 @@ entity cs161_processor is
     reg2_data      : out std_logic_vector(31 downto 0);
     write_reg_addr : out std_logic_vector(4 downto 0);
     write_reg_data : out std_logic_vector(31 downto 0)
+	 --own debug signals for testing
+	 --add1_output_debug : out std_logic_vector(31 downto 0);
+	 --shift2_debug : out std_logic_vector(31 downto 0);
+	 --add2_debug : out std_logic_vector(31 downto 0);
+	 --mux3_debug : out std_logic_vector(31 downto 0)
     );
 end cs161_processor;
 
@@ -42,55 +47,67 @@ architecture Behavioral of cs161_processor is
 
     signal pc_signal_next : std_logic_vector(31 downto 0) := (others => '0') ;
 	 signal pc_signal_prev : std_logic_vector(31 downto 0) := (others => '0') ;
-	 signal instr_address : std_logic_vector(7 downto 0);
-	 signal instr_memory_out : std_logic_vector(31 downto 0);
-	 signal control_input : std_logic_vector(5 downto 0);
-	 signal register_input_1 : std_logic_vector(4 downto 0);
-	 signal register_input_2 : std_logic_vector(4 downto 0);
-	 signal mux_1_input : std_logic_vector(4 downto 0);
-	 signal sign_extend_input : std_logic_vector(15 downto 0);
-	 signal mux_1_output : std_logic_vector(4 downto 0);
+	 signal instr_address : std_logic_vector(7 downto 0) 	 := (others => '0') ;
+	 signal instr_memory_out : std_logic_vector(31 downto 0) := (others => '0'); 
+	 signal control_input : std_logic_vector(5 downto 0):= (others => '0');
+	 signal register_input_1 : std_logic_vector(4 downto 0):= (others => '0');
+	 signal register_input_2 : std_logic_vector(4 downto 0):= (others => '0');
+	 signal mux_1_input : std_logic_vector(4 downto 0):= (others => '0');
+	 signal sign_extend_input : std_logic_vector(15 downto 0):= (others => '0');
+	 signal mux_1_output : std_logic_vector(4 downto 0):= (others => '0');
+	-- signal write_en : std_logic;
 	 signal control_output_RegDst : std_logic;
 	 signal control_output_Branch : std_logic;
 	 signal control_output_MemRead : std_logic;
 	 signal control_output_MemtoReg : std_logic;
-	 signal control_output_ALUOp : std_logic_vector(1 downto 0);
+	 signal control_output_ALUOp : std_logic_vector(1 downto 0) := (others => '0');
 	 signal control_output_MemWrite : std_logic;
 	 signal control_output_ALUSrc : std_logic;
 	 signal control_output_RegWrite : std_logic;
-	 signal register_read_data_1 : std_logic_vector(31 downto 0);
-	 signal register_read_data_2 : std_logic_vector(31 downto 0);
-	 signal sign_extender_output : std_logic_vector(31 downto 0);
+	 signal register_read_data_1 : std_logic_vector(31 downto 0) := (others => '0');
+	 signal register_read_data_2 : std_logic_vector(31 downto 0) := (others => '0');
+	 signal sign_extender_output : std_logic_vector(31 downto 0) := (others => '0');
 	 --signal alu_control_input : std_logic_vector(5 downto 0); might not need should be instr_memory_out(5 downto 0)
-	 signal add_1_output : std_logic_vector(31 downto 0);
-	 signal shift_left_output : std_logic_vector(31 downto 0);
-	 signal mux_2_output : std_logic_vector(31 downto 0);
-	 signal alu_control_output : std_logic_vector(3 downto 0);
-	 signal add_2_output : std_logic_vector(31 downto 0);
+	 signal add_1_output : std_logic_vector(31 downto 0) := (others => '0');
+	 signal shift_left_output : std_logic_vector(31 downto 0) := (others => '0');
+	 signal mux_2_output : std_logic_vector(31 downto 0) := (others => '0');
+	 signal alu_control_output : std_logic_vector(3 downto 0) := (others => '0');
+	 signal add_2_output : std_logic_vector(31 downto 0) := (others => '0');
 	 signal and_gate_output : std_logic;
 	 signal alu_zero_output : std_logic;
-	 signal alu_result_output : std_logic_vector(31 downto 0);
-	 signal data_memory_output : std_logic_vector(31 downto 0);
-	 signal mux_3_output : std_logic_vector(31 downto 0);
-	 signal mux_4_output : std_logic_vector(31 downto 0);
-	 
-	 
+	 signal alu_result_output : std_logic_vector(31 downto 0) := (others => '0');
+	 signal data_memory_output : std_logic_vector(31 downto 0) := (others => '0');
+	 signal mux_3_output : std_logic_vector(31 downto 0) := (others => '0');
+	 signal mux_4_output : std_logic_vector(31 downto 0) := (others => '0');
 	 
 begin
 
-	instr_address <= pc_signal_next ( 9 downto 2 );
+	--instr_address <= pc_signal_prev ( 9 downto 2 );
+	--write_en <= '1';
+	
+	--pc_signal_next <= (others => '0');
 
+	PC : generic_register generic map (size => 32)
+			port map(clk 		=> clk, 
+						rst 		=> rst, 
+						write_en => '1', 
+						data_in  => pc_signal_next, 
+						data_out => pc_signal_prev);
+	
 	Instruction_Memory : memory port map(clk 						=> clk,
 													 rst 						=> rst,
-													 instr_read_address 	=> instr_address,
+													 instr_read_address 	=> pc_signal_prev(9 downto 2),
 													 instr_instruction 	=> instr_memory_out,
 													 data_mem_write 		=> '0',
 													 data_address 			=> (others => '0'),
 													 data_write_data 		=> (others => '0'),
 													 data_read_data 		=> open);
 													 
-	Add_1 : adder port map(pc_address => pc_signal_next,
-								  output 	 => add_1_output);
+	Add_1 : alu port map(alu_control_in => "0010",
+								channel_a_in	=> pc_signal_prev,
+								channel_b_in 	=> "00000000000000000000000000000100",
+								zero_out 		=> open,
+								alu_result_out	=> add_1_output);
 	
 	Mux_1 : mux_2_1_5 port map(select_in => control_output_RegDst,
 										data_0_in => instr_memory_out(20 downto 16),
@@ -129,8 +146,8 @@ begin
 										 data_0_in => register_read_data_2,
 										 data_out  => mux_2_output);
 										 
-	Shift_2 : shifter port map(input  => sign_extender_output,
-										output => shift_left_output);
+	Shift_2 : shifter port map(shift_input  => sign_extender_output,
+										shift_output => shift_left_output);
 										
 	Add_2 : alu port map(alu_control_in => "0010",
 								channel_a_in	=> add_1_output,
@@ -158,16 +175,16 @@ begin
 	Mux_3 : mux_2_1_32 port map(select_in => and_gate_output,
 										 data_0_in => add_1_output,
 										 data_1_in => add_2_output,
-										 data_out  => mux_3_output);
+										 data_out  => pc_signal_next);
 	
 	Mux_4 : mux_2_1_32 port map(select_in => control_output_MemToReg,
-										 data_0_in => alu_result_output,
-										 data_1_in => data_memory_output,
+										 data_0_in => data_memory_output,
+										 data_1_in => alu_result_output,
 										 data_out  => mux_4_output);
 	
-	prog_count 		<= pc_signal_next;
-	pc_signal_prev <= pc_signal_next;
-	pc_signal_next <= mux_4_output;
+	prog_count 		<= pc_signal_prev;
+	--pc_signal_prev <= pc_signal_next;
+	--pc_signal_next <= mux_4_output;
 	instr_opcode 	<= instr_memory_out(5 downto 0);
 	reg1_addr      <= instr_memory_out(25 downto 21);
    reg1_data      <= register_read_data_1;
@@ -175,6 +192,10 @@ begin
    reg2_data      <= register_read_data_2;
    write_reg_addr <= alu_result_output(4 downto 0);
    write_reg_data <= register_read_data_2;
+	--add1_output_debug <= add_1_output;
+	--shift2_debug <= shift_left_output;
+	--add2_debug <= add_2_output;
+	--mux3_debug <= mux_3_output;
 	
 end Behavioral;
 

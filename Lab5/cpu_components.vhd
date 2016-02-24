@@ -222,7 +222,7 @@ use std.textio.all;
 
 entity memory is
   generic (
-    COE_FILE_NAME        : string   := "init.coe"
+    COE_FILE_NAME        : string   := "init2.coe"
     );
   port (
 	 clk						 : in std_logic;
@@ -491,20 +491,20 @@ use IEEE.NUMERIC_STD.ALL;
 use IEEE.STD_LOGIC_UNSIGNED.ALL;
 entity shifter is
 	port(
-		input  : in std_logic_vector(31 downto 0);
-		output : out std_logic_vector(31 downto 0)
+		shift_input  : in std_logic_vector(31 downto 0);
+		shift_output : out std_logic_vector(31 downto 0)
 		);
 end shifter;
 
 architecture Behavorial of shifter is
 begin
-	process(input)
+	process(shift_input)
 		variable temp : std_logic_vector(31 downto 0);
 	begin
 		temp := (others => '0');
-		temp := input;
+		temp := shift_input;
 		temp := temp(29 downto 0) & '0' & '0';
-		output <= temp;
+		shift_output <= temp;
 	end process;
 end Behavorial;
 
