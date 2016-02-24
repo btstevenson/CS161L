@@ -222,7 +222,7 @@ use std.textio.all;
 
 entity memory is
   generic (
-    COE_FILE_NAME        : string   := "init.coe"
+    COE_FILE_NAME        : string   := "init2.coe"
     );
   port (
 	 clk						 : in std_logic;
