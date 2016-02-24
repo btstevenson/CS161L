@@ -164,6 +164,18 @@ begin
 										 data_0_in => alu_result_output,
 										 data_1_in => data_memory_output,
 										 data_out  => mux_4_output);
+	
+	prog_count 		<= pc_signal_next;
+	pc_signal_prev <= pc_signal_next;
+	pc_signal_next <= mux_4_output;
+	instr_opcode 	<= instr_memory_out(5 downto 0);
+	reg1_addr      <= instr_memory_out(25 downto 21);
+   reg1_data      <= register_read_data_1;
+   reg2_addr      <= instr_memory_out(20 downto 16);
+   reg2_data      <= register_read_data_2;
+   write_reg_addr <= alu_result_output(4 downto 0);
+   write_reg_data <= register_read_data_2;
+	
 end Behavioral;
 
 
