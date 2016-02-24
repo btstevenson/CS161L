@@ -67,7 +67,7 @@ package cpu_component_library is
   -- Instruction/Data memory Unit
   component memory is
     generic (
-      COE_FILE_NAME         : string   := "init.coe"
+      COE_FILE_NAME         : string   := "init2.coe"
       );
     port (
 	   clk                   : in std_logic;

@@ -51,6 +51,10 @@ ARCHITECTURE behavior OF datapath_test_bench IS
          reg2_data : OUT  std_logic_vector(31 downto 0);
          write_reg_addr : OUT  std_logic_vector(4 downto 0);
          write_reg_data : OUT  std_logic_vector(31 downto 0)
+			--add1_output_debug : out std_logic_vector(31 downto 0);
+			--shift2_debug : out std_logic_vector(31 downto 0);
+			--add2_debug : out std_logic_vector(31 downto 0);
+			--mux3_debug : out std_logic_vector(31 downto 0)
         );
     END COMPONENT;
     
@@ -68,6 +72,10 @@ ARCHITECTURE behavior OF datapath_test_bench IS
    signal reg2_data : std_logic_vector(31 downto 0);
    signal write_reg_addr : std_logic_vector(4 downto 0);
    signal write_reg_data : std_logic_vector(31 downto 0);
+	--signal add1_output_debug : std_logic_vector(31 downto 0);
+	--signal shift2_debug : std_logic_vector(31 downto 0);
+	--signal add2_debug : std_logic_vector(31 downto 0);
+	--signal mux3_debug : std_logic_vector(31 downto 0);
 
    -- Clock period definitions
 	--signal clock : std_logic;
@@ -101,15 +109,19 @@ BEGIN
 
    -- Stimulus process
    stim_proc: process
-   begin		
+		variable flag : boolean;
+   begin
+		rst <= '1';
+		--while flag loop
       -- hold reset state for 100 ns.
       wait for 100 ns;	
-
+		rst <= '0';
+		
       wait for clk_period*10;
-
+		wait for 100 ns;
       -- insert stimulus here 
-
       wait;
+		--end loop;
    end process;
 
 END;
