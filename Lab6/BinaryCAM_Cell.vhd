@@ -9,7 +9,7 @@ entity BCAM_Cell is
            rst : in  STD_LOGIC;
            we : in  STD_LOGIC;
            cell_search_bit : in  STD_LOGIC;
-          -- cell_dont_care_bit : in  STD_LOGIC;
+           cell_dont_care_bit : in  STD_LOGIC;
    	   cell_match_bit_in : in  STD_LOGIC ;
            cell_match_bit_out : out  STD_LOGIC);
 end BCAM_Cell;
