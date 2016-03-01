@@ -166,7 +166,7 @@ begin
 											instr_read_address => (others => '0'),
 											instr_instruction  => open,
 											data_mem_write 	 => control_output_MemWrite,
-											data_address		 => alu_result_output(7 downto 0),
+											data_address		 => alu_result_output(9 downto 2),
 											data_write_data	 => register_read_data_2,
 											data_read_data		 => data_memory_output);
 											
@@ -185,13 +185,13 @@ begin
 	prog_count 		<= pc_signal_prev;
 	--pc_signal_prev <= pc_signal_next;
 	--pc_signal_next <= mux_4_output;
-	instr_opcode 	<= instr_memory_out(5 downto 0);
+	instr_opcode 	<= instr_memory_out(31 downto 26);
 	reg1_addr      <= instr_memory_out(25 downto 21);
    reg1_data      <= register_read_data_1;
    reg2_addr      <= instr_memory_out(20 downto 16);
    reg2_data      <= register_read_data_2;
-   write_reg_addr <= alu_result_output(4 downto 0);
-   write_reg_data <= register_read_data_2;
+   write_reg_addr <= mux_1_output;
+   write_reg_data <= mux_4_output;
 	--add1_output_debug <= add_1_output;
 	--shift2_debug <= shift_left_output;
 	--add2_debug <= add_2_output;
