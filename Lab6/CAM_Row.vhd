@@ -16,6 +16,8 @@ end CAM_Row;
 
 architecture Behavioral of CAM_Row is
 
+constant CELL_CHOICE : integer := 0; --BCAM = 0, STCAM = 1, TCAM = 2
+
 
 component BCAM_Cell is 
     Port ( clk : in  STD_LOGIC;
@@ -55,81 +57,86 @@ begin
 
 	cell_match_bit_internal(0) <= '1';
 	
-	BCells: for N in 0 to CAM_WIDTH-1 generate
-		first_gen : if N = 0 generate
-			B0: BCAM_Cell port map(
-				clk => clk,
-				rst => rst,
-				we  => we,
-				cell_search_bit => search_word(N),
-				cell_dont_care_bit => '0',
-				cell_match_bit_in => cell_match_bit_internal(N),
-				cell_match_bit_out => cell_match_bit_internal(N+1)
-			);
-		end generate first_gen;
-		rest_gen : if N > 0 generate
-			B1: BCAM_Cell port map(
-				clk => '0',
-				rst => rst,
-				we => we,
-				cell_search_bit => search_word(N),
-				cell_dont_care_bit => '0',
-				cell_match_bit_in => cell_match_bit_internal(N),
-				cell_match_bit_out => cell_match_bit_internal(N+1)
-			);
-		end generate rest_gen;
-	end generate BCells;
-
-
-	STCells: for N in 0 to CAM_WIDTH-1 generate
-		first_gen: if N = 0 generate
-			ST0 : STCAM_Cell port map(
-				clk => clk,
-				rst => rst,
-				we => we,
-				cell_dont_care_bit => dont_care_mask(N),
-				cell_search_bit => search_word(N),
-				cell_match_bit_in => cell_match_bit_internal(N),
-				cell_match_bit_out => cell_match_bit_internal(N+1)
-			);
-		end generate first_gen;
-		rest_gen : if N > 0 generate
-			ST1 : STCAM_Cell port map(
-				clk => '0',
-				rst => rst,
-				we => we,
-				cell_dont_care_bit => dont_care_mask(N),
-				cell_search_bit => search_word(N),
-				cell_match_bit_in => cell_match_bit_internal(N),
-				cell_match_bit_out => cell_match_bit_internal(N+1)
-			);
-		end generate rest_gen;
-	end generate STCells;
+	BChoice : if CELL_CHOICE = 0 generate
+		BCells: for N in 0 to CAM_WIDTH-1 generate
+			first_gen : if N = 0 generate
+				B0: BCAM_Cell port map(
+					clk => clk,
+					rst => rst,
+					we  => we,
+					cell_search_bit => search_word(N),
+					cell_dont_care_bit => '0',
+					cell_match_bit_in => cell_match_bit_internal(N),
+					cell_match_bit_out => cell_match_bit_internal(N+1)
+				);
+			end generate first_gen;
+			rest_gen : if N > 0 generate
+				B1: BCAM_Cell port map(
+					clk => '0',
+					rst => rst,
+					we => we,
+					cell_search_bit => search_word(N),
+					cell_dont_care_bit => '0',
+					cell_match_bit_in => cell_match_bit_internal(N),
+					cell_match_bit_out => cell_match_bit_internal(N+1)
+				);
+			end generate rest_gen;
+		end generate BCells;
+	end generate BChoice;
 	
-	TCells: for N in 0 to CAM_WIDTH-1 generate
-		first_gen : if N = 0 generate
-			T0 : TCAM_Cell port map(
-				clk => clk,
-				rst => rst,
-				we => we,
-				cell_dont_care_bit => dont_care_mask(N),
-				cell_search_bit => search_word(N),
-				cell_match_bit_in => cell_match_bit_internal(N),
-				cell_match_bit_out => cell_match_bit_internal(N+1)
-			);
-		end generate first_gen;
-		rest_gen : if N > 0 generate
-			T1 : TCAM_Cell port map(
-				clk => '0',
-				rst => rst,
-				we => we,
-				cell_dont_care_bit => dont_care_mask(N),
-				cell_search_bit => search_word(N),
-				cell_match_bit_in => cell_match_bit_internal(N),
-				cell_match_bit_out => cell_match_bit_internal(N+1)
-			);
-		end generate rest_gen;
-	end generate TCells;
+	STChoice : if CELL_CHOICE = 1 generate
+		STCells: for N in 0 to CAM_WIDTH-1 generate
+			first_gen: if N = 0 generate
+				ST0 : STCAM_Cell port map(
+					clk => clk,
+					rst => rst,
+					we => we,
+					cell_dont_care_bit => dont_care_mask(N),
+					cell_search_bit => search_word(N),
+					cell_match_bit_in => cell_match_bit_internal(N),
+					cell_match_bit_out => cell_match_bit_internal(N+1)
+				);
+			end generate first_gen;
+			rest_gen : if N > 0 generate
+				ST1 : STCAM_Cell port map(
+					clk => '0',
+					rst => rst,
+					we => we,
+					cell_dont_care_bit => dont_care_mask(N),
+					cell_search_bit => search_word(N),
+					cell_match_bit_in => cell_match_bit_internal(N),
+					cell_match_bit_out => cell_match_bit_internal(N+1)
+				);
+			end generate rest_gen;
+		end generate STCells;
+	end generate STChoice;
+		
+	TChoice : if CELL_CHOICE = 2 generate
+		TCells: for N in 0 to CAM_WIDTH-1 generate
+			first_gen : if N = 0 generate
+				T0 : TCAM_Cell port map(
+					clk => clk,
+					rst => rst,
+					we => we,
+					cell_dont_care_bit => dont_care_mask(N),
+					cell_search_bit => search_word(N),
+					cell_match_bit_in => cell_match_bit_internal(N),
+					cell_match_bit_out => cell_match_bit_internal(N+1)
+				);
+			end generate first_gen;
+			rest_gen : if N > 0 generate
+				T1 : TCAM_Cell port map(
+					clk => '0',
+					rst => rst,
+					we => we,
+					cell_dont_care_bit => dont_care_mask(N),
+					cell_search_bit => search_word(N),
+					cell_match_bit_in => cell_match_bit_internal(N),
+					cell_match_bit_out => cell_match_bit_internal(N+1)
+				);
+			end generate rest_gen;
+		end generate TCells;
+	end generate TChoice;
 
 	row_match <= cell_match_bit_internal(CAM_WIDTH);
 	
