@@ -39,12 +39,9 @@ begin
 		end if;
 		--matching logic
 		if store_dont_care = '1' then
-			cell_match_bit_out <= cell_match_bit_in;
-			
-		elsif if_match = cell_match_bit_in then
-			cell_match_bit_out <= '1';
+			cell_match_bit_out <= cell_match_bit_in;	
 		else
-			cell_match_bit_out <= '0';
+			cell_match_bit_out <= if_match and cell_match_bit_in;
 		end if;
 	end process;
 

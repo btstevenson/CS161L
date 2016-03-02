@@ -10,7 +10,7 @@ entity TCAM_Cell is
            we : in  STD_LOGIC;
            cell_search_bit : in  STD_LOGIC;
            cell_dont_care_bit : in  STD_LOGIC;
-   	   cell_match_bit_in : in  STD_LOGIC ;
+   	     cell_match_bit_in : in  STD_LOGIC ;
            cell_match_bit_out : out  STD_LOGIC);
 end TCAM_Cell;
 
@@ -35,11 +35,8 @@ begin
 		--matching logic
 		if cell_dont_care_bit = '1' then
 			cell_match_bit_out <= cell_match_bit_in;
-			
-		elsif if_match = cell_match_bit_in then
-			cell_match_bit_out <= '1';
 		else
-			cell_match_bit_out <= '0';
+			cell_match_bit_out <= if_match and cell_match_bit_in;
 		end if;
 	end process;
 
