@@ -10,7 +10,7 @@ entity BCAM_Cell is
            we : in  STD_LOGIC;
            cell_search_bit : in  STD_LOGIC;
            cell_dont_care_bit : in  STD_LOGIC;
-   	   cell_match_bit_in : in  STD_LOGIC ;
+			  cell_match_bit_in : in  STD_LOGIC ;
            cell_match_bit_out : out  STD_LOGIC);
 end BCAM_Cell;
 
@@ -19,26 +19,22 @@ architecture Behavioral of BCAM_Cell is
 begin
 
 	
-	process(we,clk,cell_match_bit_in)
+	process(we,clk,cell_match_bit_in, rst)
 		variable store_search_bit : STD_LOGIC;
-		variable if_match : STD_LOGIC;
+		variable if_match : STD_LOGIC := '0';
 		begin
 			
-		if we = '1' then
-			store_search_bit := cell_search_bit;
-		end if;
+			if we = '1' then
+				store_search_bit := cell_search_bit;
+			end if;
+			
+			if cell_search_bit = store_search_bit then
+				if_match := '1';
+			else 
+				if_match := '0';
+			end if;
+			cell_match_bit_out <= if_match and cell_match_bit_in;
 		
-		if cell_search_bit = store_search_bit then
-			if_match := '1';
-		else 
-			if_match := '0';
-		end if;
-		
-		if if_match = cell_match_bit_in then
-			cell_match_bit_out <= '1';
-		else
-			cell_match_bit_out <= '0';
-		end if;
 	end process;
 end Behavioral ;
 
