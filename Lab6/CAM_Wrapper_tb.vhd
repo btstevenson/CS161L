@@ -219,31 +219,78 @@
        -- hold reset state for 100 ns.
        wait for 100 ns;	
  
- 	----TEST #1-----------------------------------------
+ 	----TEST #1 Should pass with all 3 cells----------------
+		rst <= '0';
  		we_decoded_row_address <= "00000001";
  		search_word <= "10101010";
- 	dont_care_mask <= "00000000";
+		dont_care_mask <= "00000000";
  		R <= "00000001";
+		wait for clk_period*10;
  		ASSERT decoded_match_address = R report "Test case 1 failed: " severity Warning;
  	 
- 		rst <= '0';
-       wait for clk_period*10;
+ 		--rst <= '0';
+       --wait for clk_period*10;
 		 
  		rst <= '1';
        -- hold reset state for 100 ns.
        wait for 100 ns;	
  
- 	-----TEST #2 Should only be passed by SCAM and STCAM --------
+ 	-----TEST #2 Should pass with all 3 cells ----------------
+		rst <= '0';
+ 		we_decoded_row_address <= "00010101";
+ 		search_word <= "10101010";
+		dont_care_mask <= "10110000";
+		wait for clk_period*10;
+		
+ 		we_decoded_row_address <= "00000000";
+ 		search_word <= "10010000";
+		dont_care_mask <= "00000000";
+ 		R <= "00000000";
+		wait for clk_period*10;
+ 		ASSERT decoded_match_address = R report "Test case 2 failed: " severity Warning;
+ 	 
+ 		--rst <= '0';
+       --wait for clk_period*10;
+ 		
+  		rst <= '1';
+       -- hold reset state for 100 ns.
+       wait for 100 ns;	
+ 
+ 	-----TEST #3 Should pass with all 3 cells --------
+		rst <= '0';
  		we_decoded_row_address <= "00110101";
  		search_word <= "10101010";
  	dont_care_mask <= "00110000";
- 		R <= "00000101";
- 		ASSERT decoded_match_address = R report "Test case 2 failed: " severity Warning;
+ 		R <= "00110101";
+		wait for clk_period*10;
+ 		ASSERT decoded_match_address = R report "Test case 3 failed: " severity Warning;
  	 
- 		rst <= '0';
-       wait for clk_period*10;
+ 		--rst <= '0';
+       --wait for clk_period*10;
+  		rst <= '1';
+       -- hold reset state for 100 ns.
+       wait for 100 ns;
+		 
+ 	-----TEST #4 Should only be passed by SCAM and STCAM --------
+		rst <= '0';
+ 		we_decoded_row_address <= "00010101";
+ 		search_word <= "10101010";
+		dont_care_mask <= "10110000";
+		wait for clk_period*10;
+		
+ 		we_decoded_row_address <= "00010101";
+ 		search_word <= "10111010";
+		dont_care_mask <= "00000000";
+ 		R <= "00010101";
+		wait for clk_period*10;
+ 		ASSERT decoded_match_address = R report "Test case 4 failed: " severity Warning;
+ 	 
+ 		--rst <= '0';
+       --wait for clk_period*10;
  		
- 
+  		rst <= '1';
+       -- hold reset state for 100 ns.
+       wait for 100 ns;	
      wait;
     end process;
  
