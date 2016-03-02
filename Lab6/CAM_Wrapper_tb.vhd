@@ -98,14 +98,27 @@ BEGIN
 		we_decoded_row_address <= "00000001";
 		search_word <= "10101010";
 		dont_care_mask <= "00000000";
-		R <= "00000001";
-		ASSERT decoded_match_address = R report "Test case failed: " severity Warning;
+		--R <= "00000001";
+		--ASSERT decoded_match_address = R report "Test case failed: " severity Warning;
 	 
 		rst <= '0';
       wait for clk_period*10;
 		
-
-      wait;
+		rst <= '1';
+      -- hold reset state for 100 ns.
+      wait for 100 ns;	
+		
+		--CELL_CHOICE := 0;
+		we_decoded_row_address <= "00000000";
+		search_word <= "10101010";
+		dont_care_mask <= "00000000";
+		R <= "00000001";
+		ASSERT decoded_match_address = R report "Test case failed: " severity Warning;
+		
+		rst <= '0';
+      wait for clk_period*10;
+      
+		wait; --wait forever
    end process;
 
 END;
